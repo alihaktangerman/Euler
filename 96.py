@@ -3,6 +3,7 @@ s = 0
 class sudoku_solver:
     def __init__(self,sudoku):
         self.sudoku = sudoku
+        self.solved = False
     def solve(self,i,j):
         global s
         if self.sudoku[i][j] == 0: 
@@ -19,7 +20,7 @@ class sudoku_solver:
                         if self.sudoku[m][n] == x:
                             incorrect = True
                             break
-                if not incorrect:
+                if not incorrect and not self.solved:
                     self.sudoku[i][j] = x
                     if i+1 != 9:
                         self.solve(i+1,j)
@@ -27,14 +28,16 @@ class sudoku_solver:
                         self.solve(0,j+1)
                     else: 
                         s += 100*self.sudoku[0][0] + 10*self.sudoku[0][1] + self.sudoku[0][2]
-                    self.sudoku[i][j] = 0
-        else:
+                        self.solved = True
+            self.sudoku[i][j] = 0
+        elif not self.solved:
             if i+1 != 9:
                 self.solve(i+1,j)
             elif j+1 != 9:
                 self.solve(0,j+1)
             else: 
                 s += 100*self.sudoku[0][0] + 10*self.sudoku[0][1] + self.sudoku[0][2]
+                self.solved = True
                 
 sudoku_grids = [
 [
@@ -591,6 +594,7 @@ sudoku_grids = [
 
 # Print the grids
 for i, grid in enumerate(sudoku_grids):
+    print(i)
     sudoku_solver(grid).solve(0,0)
 
 print(s)
